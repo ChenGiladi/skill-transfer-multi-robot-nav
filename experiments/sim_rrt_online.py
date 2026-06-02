@@ -19,7 +19,7 @@ os.environ.setdefault("RRT_MAX_ITER", "3000")
 
 _HERE = os.path.dirname(os.path.abspath(__file__))
 _CODE = os.path.dirname(_HERE)
-sys.path.insert(0, _CODE)
+sys.path.insert(0, os.path.join(_CODE, "src"))
 sys.path.insert(0, _HERE)
 import Functions_code_RRT as FR
 from scenario import _BR   # the obstacle layouts extracted from Main_iter.py
@@ -28,7 +28,7 @@ MAX_TASK_STEPS = 300
 
 
 def _build_maps(map_id):
-    mat = np.loadtxt(os.path.join(_CODE, "env", f"{map_id}.txt"), delimiter="\t")
+    mat = np.loadtxt(os.path.join(_CODE, "maps", f"{map_id}.txt"), delimiter="\t")
     black = _BR[map_id]
     _, up_inflated, up_black = FR.Update1(mat, black, [[0, 0]])
     return up_inflated, mat, black

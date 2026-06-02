@@ -35,7 +35,7 @@ from multiprocessing import Pool, cpu_count
 
 _HERE = os.path.dirname(os.path.abspath(__file__))
 _CODE = os.path.dirname(_HERE)
-sys.path.insert(0, _CODE); sys.path.insert(0, _HERE)
+sys.path.insert(0, os.path.join(_CODE, "src")); sys.path.insert(0, _HERE)
 import Functions_code as F
 from scenario import build_scenario, _BR
 from sim_rrtbc import run_episode_rrtbc
@@ -43,7 +43,8 @@ from sim_rrt_online import run_episode_rrt
 import pubstyle as PS                      # shared publication figure style (visual-audit fix)
 PS.apply()
 
-FIG = os.path.join(os.path.dirname(_CODE), "figures")  # manuscript/figures
+FIG = os.path.join(_CODE, "figures")
+os.makedirs(FIG, exist_ok=True)
 os.makedirs(FIG, exist_ok=True)
 
 # ---- heatmap settings (Fig. 4) ----
@@ -209,7 +210,7 @@ def heatmaps():
 
 # ====================== Fig. 2 : route-library / environment mismatch ======================
 def _obst_matrix(map_id):
-    mat = np.loadtxt(os.path.join(_CODE, "env", f"{map_id}.txt"), delimiter="\t")
+    mat = np.loadtxt(os.path.join(_CODE, "maps", f"{map_id}.txt"), delimiter="\t")
     _, up_inflated, up_black = F.Update1(mat, _BR[map_id], [[0, 0]])
     return up_inflated, up_black
 
@@ -955,13 +956,14 @@ def route_diagnostics():
     computed directly from the released datasets + maps. Shows the adapted library is not
     simply larger or denser -- the difference is environment match (reviewer item 2)."""
     import pandas as pd
-    TAB = os.path.join(os.path.dirname(_CODE), "tables")
+    TAB = os.path.join(_CODE, "tables")
+    os.makedirs(TAB, exist_ok=True)
     os.makedirs(TAB, exist_ok=True)
     _, b2 = _obst_matrix("map2")
 
     def raw_routes(dataset):
         csv = "original_data.csv" if dataset == "original" else "alternative_data.csv"
-        d = pd.read_csv(os.path.join(_CODE, "dataset", csv)).dropna()
+        d = pd.read_csv(os.path.join(_CODE, "data", csv)).dropna()
         if dataset == "original":
             d = d[~((d.iloc[:, -2:] < -2) | (d.iloc[:, -2:] > 2)).any(axis=1)].iloc[:, :2]
             return F.extract_routes(d)

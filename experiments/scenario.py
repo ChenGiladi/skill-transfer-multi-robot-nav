@@ -10,15 +10,15 @@ import os, re, sys
 import numpy as np
 
 _HERE = os.path.dirname(os.path.abspath(__file__))
-_CODE = os.path.dirname(_HERE)          # manuscript/code  (the original student code)
-sys.path.insert(0, _CODE)
+_CODE = os.path.dirname(_HERE)          # repository root
+sys.path.insert(0, os.path.join(_CODE, "src"))
 
 import Functions_code as F   # the original RRT + BC + navigation primitives
 
 
 def _extract_black_ranges():
     """Pull the two hand-authored obstacle layouts out of Main_iter.py verbatim."""
-    src = open(os.path.join(_CODE, "Main_iter.py"), encoding="utf-8").read()
+    src = open(os.path.join(_CODE, "legacy", "Main_iter.py"), encoding="utf-8").read()
     out = {}
     for name, key in [("original_black_ranges_1", "map1"), ("original_black_ranges_2", "map2")]:
         m = re.search(name + r"\s*=\s*(\[.*?\n    \])", src, re.DOTALL)
@@ -44,10 +44,10 @@ def build_scenario(map_id="map1", dataset="original"):
     Routes are filtered against their NATIVE map (where they were generated), not the
     deployment map, faithfully reproducing the student's preprocessing."""
     import pandas as pd
-    mat = np.loadtxt(os.path.join(_CODE, "env", f"{map_id}.txt"), delimiter="\t")
+    mat = np.loadtxt(os.path.join(_CODE, "maps", f"{map_id}.txt"), delimiter="\t")
     black = _BR[map_id]
     csv = "original_data.csv" if dataset == "original" else "alternative_data.csv"
-    df = pd.read_csv(os.path.join(_CODE, "dataset", csv)).dropna()
+    df = pd.read_csv(os.path.join(_CODE, "data", csv)).dropna()
     if dataset == "original":
         df = df[~((df.iloc[:, -2:] < -2) | (df.iloc[:, -2:] > 2)).any(axis=1)]
         df = df.iloc[:, :2]
@@ -56,7 +56,7 @@ def build_scenario(map_id="map1", dataset="original"):
         routes = F.extract_routes_newdata(df)
     # filter against the dataset's native map (Map1 for original, Map2 for alternative)
     native = _NATIVE_MAP[dataset]
-    nmat = np.loadtxt(os.path.join(_CODE, "env", f"{native}.txt"), delimiter="\t")
+    nmat = np.loadtxt(os.path.join(_CODE, "maps", f"{native}.txt"), delimiter="\t")
     _, _, native_black = F.Update1(nmat, _BR[native], [[0, 0]])
     routes = F.filter_routes_through_black_ranges_and_distance(routes, native_black)
     # deployment-map config space (used for navigation/collision checks)

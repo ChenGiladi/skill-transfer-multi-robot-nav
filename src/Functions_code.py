@@ -287,7 +287,7 @@ class NeuralNetwork(nn.Module):
 input_size = 29
 num_actions = 2
 model = NeuralNetwork(input_size, num_actions)
-model1_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "trained_model_NN.pth")
+model1_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "model", "trained_model_NN.pth")
 
 model.load_state_dict(torch.load(model1_path, map_location="cpu"))
 

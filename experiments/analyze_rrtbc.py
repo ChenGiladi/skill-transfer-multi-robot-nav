@@ -16,8 +16,10 @@ import pubstyle as PS                      # shared publication figure style (vi
 PS.apply()
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-FIG = os.path.join(os.path.dirname(os.path.dirname(HERE)), "figures")  # manuscript/figures
-TAB = os.path.join(os.path.dirname(os.path.dirname(HERE)), "tables")   # manuscript/tables
+FIG = os.path.join(os.path.dirname(HERE), "figures")
+os.makedirs(FIG, exist_ok=True)
+TAB = os.path.join(os.path.dirname(HERE), "tables")
+os.makedirs(TAB, exist_ok=True)
 os.makedirs(FIG, exist_ok=True)
 os.makedirs(TAB, exist_ok=True)
 

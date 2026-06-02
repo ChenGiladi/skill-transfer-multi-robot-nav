@@ -12,7 +12,7 @@ import os, sys, time, json, argparse, random
 import numpy as np
 
 _HERE = os.path.dirname(os.path.abspath(__file__))
-sys.path.insert(0, os.path.dirname(_HERE))
+sys.path.insert(0, os.path.join(os.path.dirname(_HERE), "src"))
 import Functions_code as F
 from scenario import build_scenario
 

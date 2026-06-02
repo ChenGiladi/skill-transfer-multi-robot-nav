@@ -7,9 +7,9 @@ Python 3 with `numpy`, `scipy`, `matplotlib`, `pandas`, `torch`.
 
 ## What is faithful
 The simulators reuse the **original student code verbatim** — the trained Behavior-Cloning
-network (`../trained_model_NN.pth`), the RRT planner, the offline route datasets
-(`../dataset/`), and the per-step navigation logic in `../Functions_code.py` /
-`../Functions_code_RRT.py`. Only the original multiprocessing/shared-memory harness
+network (`../model/trained_model_NN.pth`), the RRT planner, the offline route datasets
+(`../data/`), and the per-step navigation logic in `../src/Functions_code.py` /
+`../src/Functions_code_RRT.py`. Only the original multiprocessing/shared-memory harness
 (which did not scale) is replaced, by a single-process deterministic round-robin loop.
 
 ## Two things we measure
@@ -58,8 +58,8 @@ Notes for exact reproduction:
   `run_episode_rrt` directly. (The hybrid is insensitive to the cap: its RRT reconnects
   terminate in far fewer iterations.)
 - Tested environment: Python 3.12, `numpy` 2.3, `scipy` 1.16, `pandas` 2.3, `torch` 2.9.
-  Required assets (all released): `../trained_model_NN.pth`, `../dataset/*.csv`,
-  `../env/{map1,map2}.txt`.
+  Required assets (all released): `../model/trained_model_NN.pth`, `../data/*.csv`,
+  `../maps/{map1,map2}.txt`.
 
 ## Reproduction manifest
 Which script and raw input produce each manuscript output:
