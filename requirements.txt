@@ -1,0 +1,11 @@
+# Reproduces the released results with Python 3.12 (tested on Linux).
+# Deterministic result columns reproduce on nearby versions too; wall-clock
+# runtime is hardware-dependent and is the only column that varies.
+numpy==2.3.*
+scipy==1.16.*
+pandas==2.3.*
+torch==2.9.*
+matplotlib>=3.8
+seaborn>=0.13
+scikit-learn>=1.4
+joblib>=1.3

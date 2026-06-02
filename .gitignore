@@ -1,0 +1,16 @@
+__pycache__/
+*.py[cod]
+*.egg-info/
+.ipynb_checkpoints/
+.DS_Store
+.venv/
+venv/
+
+# Generated figures are NOT tracked — regenerate them from the committed results_*.csv
+# via reproducible/analyze_rrtbc.py and reproducible/make_heatmaps_rrtbc.py
+*.png
+*.pdf
+*.svg
+*.eps
+figures/
+reproducible/figures/

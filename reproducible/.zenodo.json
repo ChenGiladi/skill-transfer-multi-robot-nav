@@ -1,0 +1,12 @@
+{
+  "title": "Environment-Specific Skill Transfer for Decentralized Multi-Robot Navigation — reproducible code and data",
+  "upload_type": "software",
+  "description": "Deterministic, seeded simulator, datasets, trained Behavior-Cloning model, and experiment/analysis scripts that reproduce every result and figure of the article 'Environment-Specific Skill Transfer for Decentralized Multi-Robot Navigation via Hybrid RRT and Behavior Cloning in Grid-Based Industrial Environments'. See README.md and reproducible/README.md for the full reproduction manifest.",
+  "license": "MIT",
+  "creators": [
+    {"name": "Atia, Yovel", "affiliation": "Ben-Gurion University of the Negev, Department of Mechanical Engineering"},
+    {"name": "Giladi, Chen", "affiliation": "Sami Shamoon College of Engineering (SCE)", "orcid": "0000-0003-3964-5482"}
+  ],
+  "keywords": ["decentralized multi-robot navigation", "skill transfer", "behavior cloning", "rapidly-exploring random tree", "reproducibility", "grid navigation"],
+  "access_right": "open"
+}
