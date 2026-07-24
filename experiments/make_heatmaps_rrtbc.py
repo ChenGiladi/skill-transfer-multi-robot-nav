@@ -10,7 +10,7 @@ Figure numbers follow the manuscript's cited order (Map layouts -> workflow -> m
   tables/tab_route_diag.tex -- route-library diagnostics table (Section 3.3) (sizes/coverage).
   fig_heatmaps_map2.png   -- Fig. 5: per-cell collision heatmaps on Map2 (Map2-naive hybrid,
                              Map2-adapted hybrid, online RRT) at N=4 and N=10, aggregated over
-                             15 seeds with a shared colour scale, colour bar and obstacle
+                             30 seeds with a shared colour scale, colour bar and obstacle
                              outlines, normalised to collisions per 100 completed tasks.
 
 The heatmap episodes are launched in parallel; the other two need only assets, so they are
