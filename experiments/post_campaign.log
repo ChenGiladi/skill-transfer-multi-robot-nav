@@ -1,3 +1,32 @@
+[post] start Thu Jul  2 17:14:39 IDT 2026
+[post] campaign_all finished Thu Jul  2 19:58:45 IDT 2026
+Revision episodes: 1500 | reps=30 | procs=14
+multiprocessing.pool.RemoteTraceback: 
+"""
+Traceback (most recent call last):
+  File "/usr/lib/python3.12/multiprocessing/pool.py", line 125, in worker
+    result = (True, func(*args, **kwds))
+                    ^^^^^^^^^^^^^^^^^^^
+  File "/home/chen/skill-transfer-multi-robot-nav/.claude/worktrees/revision-r1/experiments/run_experiments_revision.py", line 69, in worker
+    import Functions_code_RRT as FR
+ModuleNotFoundError: No module named 'Functions_code_RRT'
+"""
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/chen/skill-transfer-multi-robot-nav/.claude/worktrees/revision-r1/experiments/run_experiments_revision.py", line 135, in <module>
+    main()
+  File "/home/chen/skill-transfer-multi-robot-nav/.claude/worktrees/revision-r1/experiments/run_experiments_revision.py", line 119, in main
+    for i, r in enumerate(pool.imap_unordered(worker, cfgs, chunksize=1), 1):
+  File "/usr/lib/python3.12/multiprocessing/pool.py", line 873, in next
+    raise value
+ModuleNotFoundError: No module named 'Functions_code_RRT'
+[post] revision campaign done rc=1 Thu Jul  2 19:58:47 IDT 2026
+wrote tables/tab_planning_cost.tex + tab_coll_composition.tex + fig_planning_cost.png + fig_collision_types.png
+wrote fig_sharing_throughput.pdf
+wrote tables/tab_skill_transfer.tex
+wrote tables/tab_sharing_stats.tex
 # RRT + Behavior-Cloning campaign — statistics
 
 Source: results_rrtbc.csv (960 episodes). Faithful method: RRT expert routes + trained BC local policy + route reuse. Collisions = blocked-move (3-step-lookahead-into-obstacle) events. Episodes run to steps=2000 (~245 completed tasks at 5 agents), so the shared collision database fills and comparisons have power.
@@ -51,3 +80,48 @@ Source: results_rrtbc.csv (960 episodes). Faithful method: RRT expert routes + t
 - map2 selective=0.6: post-hoc power at n=30 per arm = 0.07
 - map2 full=1.0: post-hoc power at n=30 per arm = 0.26
 - map1 full: minimal detectable collision reduction with >=0.80 power at n=30 per arm = 15% of the no-sharing mean.
+
+Figures -> /home/chen/skill-transfer-multi-robot-nav/.claude/worktrees/revision-r1/figures
+Tables  -> /home/chen/skill-transfer-multi-robot-nav/.claude/worktrees/revision-r1/tables
+[post] analyze_rrtbc done rc=0 Thu Jul  2 20:01:08 IDT 2026
+[skip] results_revision.csv (revision campaign) not found at /home/chen/skill-transfer-multi-robot-nav/.claude/worktrees/revision-r1/experiments/results_revision.csv -> outputs that need it are skipped.
+[skip] tab_lib_baselines.tex needs both the revision CSV and results_rrtbc.csv.
+[skip] tab_map3_transfer.tex needs R5_transfer_map3 rows in the revision CSV.
+wrote figures/fig_budget_frontier.pdf + .png
+# Revision-1 campaign — statistics
+
+Source: results_revision.csv (0 episodes, 0 seeds per condition), reference conditions from results_rrtbc.csv (T0, 30 seeds) and results_rrt_online.csv (paper cap 3000). All episodes: 2000 scheduler steps.
+
+
+## R1 library variants: no data yet (needs revision CSV + results_rrtbc.csv), skipped.
+
+## R2 scripted vs BC: no data yet, skipped.
+
+## R3+R4 compute-budget frontier (Map2): runtime, coll/task, tasks per wall-clock second
+- N=4:
+  - Map2-naive hybrid: runtime 60.7 ± 6.5 s | coll/task 4.08 | tasks/s 2.92
+  - Map2-adapted hybrid: runtime 49.5 ± 2.9 s | coll/task 1.11 | tasks/s 3.83
+  - online RRT, cap 3000: runtime 262.0 ± 158.0 s | coll/task 0.81 | tasks/s 0.84
+- N=10:
+  - Map2-naive hybrid: runtime 210.0 ± 19.6 s | coll/task 6.75 | tasks/s 1.90
+  - Map2-adapted hybrid: runtime 184.6 ± 12.1 s | coll/task 3.87 | tasks/s 2.31
+  - online RRT, cap 3000: runtime 921.9 ± 470.9 s | coll/task 2.73 | tasks/s 0.51
+
+## R5 Map3 transfer: no data yet, skipped.
+
+## Holm within families
+- R1 family: no tests available, skipped.
+- R5 family: no tests available, skipped.
+
+Figures -> /home/chen/skill-transfer-multi-robot-nav/.claude/worktrees/revision-r1/figures
+Tables  -> /home/chen/skill-transfer-multi-robot-nav/.claude/worktrees/revision-r1/tables
+[post] analyze_revision done rc=0 Thu Jul  2 20:01:19 IDT 2026
+wrote fig2_environments.pdf
+wrote fig_framework.pdf
+wrote fig_route_mismatch.pdf  (naive 8.1% cells / 58% routes)
+wrote tables/tab_route_diag.tex  (naive raw=3543 filt=3304; adapted raw=3592 filt=3256)
+[heatmaps] 180 episodes on 14 procs ...
+[fig5] vmax=1.893  vmax_disp=2.00  hi_level=1.10
+wrote fig_heatmaps_map2.pdf
+[post] heatmaps done rc=0 Thu Jul  2 21:08:43 IDT 2026
+[post] PIPELINE ALL DONE Thu Jul  2 21:08:43 IDT 2026

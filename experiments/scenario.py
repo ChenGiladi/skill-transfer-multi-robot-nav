@@ -29,13 +29,23 @@ def _extract_black_ranges():
 
 _BR = _extract_black_ranges()
 
+# Revision 1: Map3 (corridor/bottleneck layout, see gen_map3.py) is defined by generated
+# files rather than Main_iter.py literals; load its config-space mask if present.
+_MAP3_JSON = os.path.join(_CODE, "maps", "map3_black_ranges.json")
+if os.path.exists(_MAP3_JSON):
+    import json as _json
+    with open(_MAP3_JSON) as _f:
+        _BR["map3"] = [[tuple(t) for t in row] for row in _json.load(_f)]
+
 # Each route dataset was *generated on* (and, per the original pipeline, pre-filtered
 # against) a specific map: the "original" library was built on Map1, the "alternative"
 # library was adapted on Map2. Main_iter.py filters routes against that NATIVE map and
 # only then deploys them ("filter routes on map1 and after that choose map2", line 349).
 # Filtering against the deployment map instead would silently delete the very Map1 routes
 # that intersect Map2 obstacles -- erasing the environment-mismatch / skill-transfer effect.
-_NATIVE_MAP = {"original": "map1", "alternative": "map2"}
+_NATIVE_MAP = {"original": "map1", "alternative": "map2", "map3lib": "map3"}
+_DATASET_CSV = {"original": "original_data.csv", "alternative": "alternative_data.csv",
+                "map3lib": "map3_data.csv"}
 
 
 def build_scenario(map_id="map1", dataset="original"):
@@ -46,7 +56,7 @@ def build_scenario(map_id="map1", dataset="original"):
     import pandas as pd
     mat = np.loadtxt(os.path.join(_CODE, "maps", f"{map_id}.txt"), delimiter="\t")
     black = _BR[map_id]
-    csv = "original_data.csv" if dataset == "original" else "alternative_data.csv"
+    csv = _DATASET_CSV[dataset]
     df = pd.read_csv(os.path.join(_CODE, "data", csv)).dropna()
     if dataset == "original":
         df = df[~((df.iloc[:, -2:] < -2) | (df.iloc[:, -2:] > 2)).any(axis=1)]

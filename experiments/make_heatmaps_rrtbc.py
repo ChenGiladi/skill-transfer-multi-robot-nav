@@ -49,7 +49,7 @@ os.makedirs(FIG, exist_ok=True)
 
 # ---- heatmap settings (Fig. 4) ----
 HEAT_STEPS = 1200
-HEAT_SEEDS = tuple(range(15))
+HEAT_SEEDS = tuple(range(30))
 HEAT_AGENTS = (4, 10)
 HEAT_COLS = [("Hybrid · Map2-naive", "hyb", "original"),
              ("Hybrid · Map2-adapted", "hyb", "alternative"),
@@ -916,15 +916,24 @@ def framework():
 
 # ============================ Fig. 1 : map layouts ============================
 def environments():
-    """Fig. 1: the two map layouts, clean -- no axis ticks, no generic configuration-space
-    title, panels labelled simply Map1/Map2 (reviewer item 11). Regenerated from the real
-    obstacle layouts (inflated by the robot footprint), so it stays reproducible."""
+    """Fig. 1: the map layouts, clean -- no generic configuration-space title, panels
+    labelled simply Map1/Map2 (reviewer item 11) plus Map3 when present (Revision 1).
+    Regenerated from the real obstacle layouts (inflated by the robot footprint), so it
+    stays reproducible."""
     m1, _ = _obst_matrix("map1")
     m2, _ = _obst_matrix("map2")
     novel = ((m2 > 0.5) & ~(m1 > 0.5)).astype(float)   # obstacle in Map2 but free in Map1
+    panels = [(m1, "Map1"), (m2, "Map2")]
+    # Revision 1: add Map3 (corridor/bottleneck evaluation environment) as a third panel,
+    # rendered identically but with no "new vs Map1" overlay (that comparison is specific
+    # to the Map2 transfer experiment). Conditional so the script still produces the
+    # original two-panel figure on checkouts without Map3.
+    if os.path.exists(os.path.join(_CODE, "maps", "map3.txt")):
+        m3, _ = _obst_matrix("map3")
+        panels.append((m3, "Map3"))
     cmap = ListedColormap(["white", "#4d4d4d"])         # free = white, obstacle = dark gray (less heavy)
-    fig, ax = plt.subplots(1, 2, figsize=(8.8, 4.7))
-    for a, mat, name in [(ax[0], m1, "Map1"), (ax[1], m2, "Map2")]:
+    fig, ax = plt.subplots(1, len(panels), figsize=(4.4 * len(panels), 4.7))
+    for a, (mat, name) in zip(ax, panels):
         a.imshow(mat, cmap=cmap, vmin=0, vmax=1, interpolation="nearest")
         a.contour(mat, levels=[0.5], colors="k", linewidths=0.5)
         a.set_title(name)
