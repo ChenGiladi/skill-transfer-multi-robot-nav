@@ -18,11 +18,57 @@ from scenario import build_scenario
 
 MAX_TASK_STEPS = 300  # safeguard against non-converging tasks (counts as failed)
 
+# ---- Revision-1 additions -----------------------------------------------------------
+# (i) routes_override: deploy a transformed route library (see lib_variants.py) while
+#     keeping every other component byte-identical.
+# (ii) policy="scripted": replace the trained BC connector with a simple non-learning
+#      greedy route-following controller (Reviewer B, comment 8 ablation). The scripted
+#      connector honors the exact Apply_BC contract: called to bridge the robot onto a
+#      selected route start 2-7 cells away, returns (success, [positions after start]),
+#      terminates within 1.5 cells of the target, and gives up after 100 steps.
+_APPLY_BC_ORIG = F.Apply_BC
+
+
+def _scripted_connector(model, start_point, goal_point, up_scaled_matrix, up_black_ranges):
+    pos = [float(start_point[0]), float(start_point[1])]
+    positions = [list(pos)]
+    for _ in range(100):
+        dx, dy = goal_point[0] - pos[0], goal_point[1] - pos[1]
+        dist = (dx * dx + dy * dy) ** 0.5
+        if dist <= 1.5:
+            return True, positions[1:]
+        ux, uy = dx / dist, dy / dist
+        moved = False
+        # try the direct unit step, then deterministic +/-45 and +/-90 degree deviations
+        for ca, sa in ((1.0, 0.0), (0.7071, 0.7071), (0.7071, -0.7071), (0.0, 1.0), (0.0, -1.0)):
+            nx = pos[0] + ux * ca - uy * sa
+            ny = pos[1] + ux * sa + uy * ca
+            if not (0 <= nx <= 49 and 0 <= ny <= 49):
+                continue
+            if F.is_point_inside_black_ranges(nx, ny, up_black_ranges):
+                continue
+            pos = [nx, ny]
+            positions.append(list(pos))
+            moved = True
+            break
+        if not moved:
+            return False, positions[1:]
+    return False, positions[1:]
+
+
+def _set_policy(policy):
+    F.Apply_BC = _APPLY_BC_ORIG if policy == "bc" else _scripted_connector
+# --------------------------------------------------------------------------------------
+
 
 def run_episode_rrtbc(map_id="map1", dataset="original", n_agents=5, steps=600,
-                      seed=0, share_fraction=0.0, return_grid=False, return_history=False):
+                      seed=0, share_fraction=0.0, return_grid=False, return_history=False,
+                      routes_override=None, policy="bc"):
     random.seed(seed); np.random.seed(seed)
+    _set_policy(policy)
     routes, up_inflated, orig_scaled, orig_black = build_scenario(map_id, dataset)
+    if routes_override is not None:
+        routes = routes_override
     R, C = up_inflated.shape
     # static (agent-free) obstacle ranges for the deployment map -> lets us classify each
     # collision as static-obstacle vs robot-robot without changing the navigation logic.

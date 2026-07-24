@@ -1,5 +1,5 @@
 cff-version: 1.2.0
-title: "Environment-Specific Skill Transfer for Decentralized Multi-Robot Navigation — reproducible code and data"
+title: "Environment-Specific Route-Library Adaptation for Decentralized Multi-Robot Navigation — reproducible code and data"
 message: "If you use this software or data, please cite the associated article."
 type: software
 repository-code: "https://github.com/ChenGiladi/skill-transfer-multi-robot-nav"
@@ -10,15 +10,26 @@ authors:
     affiliation: "Ben-Gurion University of the Negev, Department of Mechanical Engineering"
   - family-names: Giladi
     given-names: Chen
-    affiliation: "Sami Shamoon College of Engineering"
+    affiliation: "Sami Shamoon College of Engineering, Department of Mechanical Engineering"
     orcid: "https://orcid.org/0000-0003-3964-5482"
 keywords:
   - decentralized multi-robot navigation
-  - skill transfer
+  - route-library adaptation
   - behavior cloning
   - rapidly-exploring random tree
+  - collision-history sharing
   - reproducibility
   - grid navigation
 license: MIT
-version: "1.0.0"
-date-released: "2026-05-31"
+version: "2.0.0"
+date-released: "2026-07-24"
+preferred-citation:
+  type: article
+  title: "Environment-Specific Route-Library Adaptation for Decentralized Multi-Robot Navigation via Hybrid RRT and Behavior Cloning in Grid-Based Industrial Environments"
+  journal: "Robotics"
+  year: 2026
+  authors:
+    - family-names: Atia
+      given-names: Yovel
+    - family-names: Giladi
+      given-names: Chen
